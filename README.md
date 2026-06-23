@@ -33,12 +33,16 @@
 
 ## Build
 
-Use cmake to build and install in a local directory.
+Use cmake to build and install in a local directory. Build it with container docker://y19y19/tritonserver_builder_gcc13:v4
 
 ```
+# If you don't have a container, pull it once
+$ singularity pull --disable-cache docker://y19y19/tritonserver_builder_gcc13:v4
+
+# Build it in container
 $ singularity run --nv -e --no-home -B /depot/cms/users/yao317/SONIC/CustomBackend/alpaka_LST_backend/lst_cuda_backend/:/workspace/backend/ -B /cvmfs/:/cvmfs/ /depot/cms/users/yao317/Singularities/tritonserver_builder_gcc13_v4.sif
 
-
+# In the container
 $ cd /workspace/backend/
 $ rm -rf build
 $ mkdir build
