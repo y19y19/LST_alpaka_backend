@@ -36,10 +36,6 @@
 Use cmake to build and install in a local directory.
 
 ```
-$ mkdir build
-$ cd build
-$ cmake -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install ..
-$ make install
 $ singularity run --nv -e --no-home -B /depot/cms/users/yao317/SONIC/CustomBackend/alpaka_LST_backend/lst_cuda_backend/:/workspace/backend/ -B /cvmfs/:/cvmfs/ /depot/cms/users/yao317/Singularities/tritonserver_builder_gcc13_v4.sif
 
 
