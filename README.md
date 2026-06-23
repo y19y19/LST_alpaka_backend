@@ -28,17 +28,8 @@
 
 [![License](https://img.shields.io/badge/License-BSD3-lightgrey.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-# Triton Inference Server Identity Backend
+# Triton Inference Server LST Alpaka Backend
 
-A simple Triton backend that copies input tensors to corresponding
-output tensors. This backend is used primarily for testing. To learn
-more about writing your own Triton backend including simple examples,
-see the documentation included in the [backend
-repo](https://github.com/triton-inference-server/backend).
-
-Ask questions or report problems with the Identity backend in the main
-Triton [issues
-page](https://github.com/triton-inference-server/server/issues).
 
 ## Build
 
@@ -48,6 +39,16 @@ Use cmake to build and install in a local directory.
 $ mkdir build
 $ cd build
 $ cmake -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install ..
+$ make install
+$ singularity run --nv -e --no-home -B /depot/cms/users/yao317/SONIC/CustomBackend/alpaka_LST_backend/lst_cuda_backend/:/workspace/backend/ -B /cvmfs/:/cvmfs/ /depot/cms/users/yao317/Singularities/tritonserver_builder_gcc13_v4.sif
+
+
+$ cd /workspace/backend/
+$ rm -rf build
+$ mkdir build
+$ cd build
+$ export CUDA_ARCH_LIST="7.5" # For Tesla T4 GPU
+$ cmake -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_BACKEND_REPO_TAG=r24.11 -DTRITON_CORE_REPO_TAG=r24.11 -DTRITON_COMMON_REPO_TAG=r24.11 ..
 $ make install
 ```
 
