@@ -31,12 +31,39 @@
 # Triton Inference Server LST Alpaka Backend
 
 
+## Setup for Backend Compilation
+
+To setup backend compilation, it needs `lst_cuda.so` and `lst_cpu.so` from standalone compilation, and code modified for backend compilation.
+See https://github.com/y19y19/LST_alpaka_standalone_SONIC/tree/CMSSW_16_1_0_pre4_backend_compilation
+
+1. Clone the backend repository:
+```
+git clone git@github.com:y19y19/LST_alpaka_backend.git
+```
+
+2. Clone the standalone repository and compile `lst_cpu.so` and `lst_cuda.so` as instructed there:
+```
+git clone -b CMSSW_16_1_0_pre4 git@github.com:y19y19/LST_alpaka_standalone_SONIC.git lst_standalone
+```
+
+3. Clone the standalone repository for backend compilation:
+```
+git clone -b CMSSW_16_1_0_pre4_backend_compilation git@github.com:y19y19/LST_alpaka_standalone_SONIC.git lst_standalone_for_backend_compilation
+```
+
+4. Copy code over into the backend:
+```
+cp -r lst_standalone_for_backend_compilation/RecoTracker/LSTCore LST_alpaka_backend/
+cp lst_standalone/RecoTracker/LSTCore/standalone/LST/lst_cpu.so LST_alpaka_backend/LSTCore/standalone/LST/
+cp lst_standalone/RecoTracker/LSTCore/standalone/LST/lst_cuda.so LST_alpaka_backend/LSTCore/standalone/LST/
+```
+
 ## Build
 
 Use cmake to build and install in a local directory. Build it with container docker://y19y19/tritonserver_builder_gcc13:v4
 
 ```
-# If you don't have a container, pull it once
+# If you don't have a container, pull it once. 
 $ singularity pull --disable-cache docker://y19y19/tritonserver_builder_gcc13:v4
 
 # Build it in container
@@ -62,31 +89,10 @@ but the listed CMake argument can be used to override.
 
 If you are building on a release branch (or on a development branch
 that is based off of a release branch), then you must set these cmake
-arguments to point to that release branch as well. For example, if you
-are building the r23.04 identity_backend branch then you need to use
-the following additional cmake flags:
-
-```
--DTRITON_BACKEND_REPO_TAG=r23.04
--DTRITON_CORE_REPO_TAG=r23.04
--DTRITON_COMMON_REPO_TAG=r23.04
-```
+arguments to point to that release branch as well. 
 
 ## Custom Metric Example
 
 When `TRITON_ENABLE_METRICS` is enabled, this backend implements an example
 of registering a custom metric to Triton's existing metrics endpoint via the
 [Metrics API](https://github.com/triton-inference-server/server/blob/main/docs/user_guide/metrics.md#custom-metrics).
-
-This metric will track the cumulative `input_byte_size` of all requests
-to this backend per-model. Here's an example output of the custom metric
-from Triton's metrics endpoint after a few requests to each model:
-
-```
-# HELP input_byte_size_counter Cumulative input byte size of all requests received by the model
-# TYPE input_byte_size_counter counter
-input_byte_size_counter{model="identity_uint32",version="1"} 64.000000
-input_byte_size_counter{model="identity_fp32",version="1"} 32.000000
-```
-
-This example can be referenced to implement custom metrics for various use cases.
