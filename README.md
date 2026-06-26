@@ -41,7 +41,9 @@ git clone git@github.com:y19y19/LST_alpaka_backend.git
 ```
 
 2. Clone the standalone repository and compile `lst_cpu.so` and `lst_cuda.so` as instructed in [https://github.com/y19y19/LST_alpaka_standalone_SONIC/tree/CMSSW_16_1_0_pre4](https://github.com/y19y19/LST_alpaka_standalone_SONIC/tree/CMSSW_16_1_0_pre4#build-lst_cudaso-and-lst_cpuso):
-
+```bash
+git clone -b CMSSW_16_1_0_pre4 git@github.com:y19y19/LST_alpaka_standalone_SONIC.git lst_standalone
+```
 
 3. Clone the standalone repository for backend compilation:
 ```bash
