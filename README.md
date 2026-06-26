@@ -61,7 +61,7 @@ Use cmake to build and install in a local directory. Build it with container doc
 
 1. If you don't have a container, pull it once. 
 ```bash
-$ singularity pull --disable-cache docker://y19y19/tritonserver_builder_gcc13:v4
+singularity pull --disable-cache docker://y19y19/tritonserver_builder_gcc13:v4
 ```
 
 2. Build it in container
