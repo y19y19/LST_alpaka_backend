@@ -34,25 +34,22 @@
 ## Setup for Backend Compilation
 
 To setup backend compilation, it needs `lst_cuda.so` and `lst_cpu.so` from standalone compilation, and code modified for backend compilation.
-See https://github.com/y19y19/LST_alpaka_standalone_SONIC/tree/CMSSW_16_1_0_pre4_backend_compilation
 
 1. Clone the backend repository:
-```
+```bash
 git clone git@github.com:y19y19/LST_alpaka_backend.git
 ```
 
-2. Clone the standalone repository and compile `lst_cpu.so` and `lst_cuda.so` as instructed there:
-```
-git clone -b CMSSW_16_1_0_pre4 git@github.com:y19y19/LST_alpaka_standalone_SONIC.git lst_standalone
-```
+2. Clone the standalone repository and compile `lst_cpu.so` and `lst_cuda.so` as instructed in [https://github.com/y19y19/LST_alpaka_standalone_SONIC/tree/CMSSW_16_1_0_pre4](https://github.com/y19y19/LST_alpaka_standalone_SONIC/tree/CMSSW_16_1_0_pre4#build-lst_cudaso-and-lst_cpuso):
+
 
 3. Clone the standalone repository for backend compilation:
-```
+```bash
 git clone -b CMSSW_16_1_0_pre4_backend_compilation git@github.com:y19y19/LST_alpaka_standalone_SONIC.git lst_standalone_for_backend_compilation
 ```
 
 4. Copy code over into the backend:
-```
+```bash
 cp -r lst_standalone_for_backend_compilation/RecoTracker/LSTCore LST_alpaka_backend/
 cp lst_standalone/RecoTracker/LSTCore/standalone/LST/lst_cpu.so LST_alpaka_backend/LSTCore/standalone/LST/
 cp lst_standalone/RecoTracker/LSTCore/standalone/LST/lst_cuda.so LST_alpaka_backend/LSTCore/standalone/LST/
@@ -62,21 +59,22 @@ cp lst_standalone/RecoTracker/LSTCore/standalone/LST/lst_cuda.so LST_alpaka_back
 
 Use cmake to build and install in a local directory. Build it with container docker://y19y19/tritonserver_builder_gcc13:v4
 
-```
-# If you don't have a container, pull it once. 
+1. If you don't have a container, pull it once. 
+```bash
 $ singularity pull --disable-cache docker://y19y19/tritonserver_builder_gcc13:v4
+```
 
-# Build it in container
-$ singularity run --nv -e --no-home -B /depot/cms/users/yao317/SONIC/CustomBackend/alpaka_LST_backend/lst_cuda_backend/:/workspace/backend/ -B /cvmfs/:/cvmfs/ /depot/cms/users/yao317/Singularities/tritonserver_builder_gcc13_v4.sif
-
+2. Build it in container
+```bash
+singularity run --nv -e --no-home -B <path_to>/LST_alpaka_backend/:/workspace/backend/ -B /cvmfs/:/cvmfs/ <path_to>/tritonserver_builder_gcc13_v4.sif
 # In the container
-$ cd /workspace/backend/
-$ rm -rf build
-$ mkdir build
-$ cd build
-$ export CUDA_ARCH_LIST="7.5" # For Tesla T4 GPU
-$ cmake -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_BACKEND_REPO_TAG=r24.11 -DTRITON_CORE_REPO_TAG=r24.11 -DTRITON_COMMON_REPO_TAG=r24.11 ..
-$ make install
+cd /workspace/backend/
+rm -rf build # if build folder exists
+mkdir build
+cd build
+export CUDA_ARCH_LIST="7.5" # For Tesla T4 GPU
+make -DTRITON_ENABLE_GPU=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/install -DTRITON_BACKEND_REPO_TAG=r24.11 -DTRITON_CORE_REPO_TAG=r24.11 -DTRITON_COMMON_REPO_TAG=r24.11 ..
+make install
 ```
 
 The following required Triton repositories will be pulled and used in
